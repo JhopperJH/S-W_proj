@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALL BUS - Menu</title>
+    <link rel="stylesheet" type="text/css" href="menu.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        CallBus
+    </div>
+    <div class="background-overlay"></div>
+    <button id="go-back-button" onclick="goBack()"><img src="assets\back.png" style="width: 30px; height: auto;"></img></button>
+    <div class="registration-form">
+        <div class="right">
+            <button id="next-button" onclick="validateInput()">แผนที่</button>
+        </div>
+        <label for="location" style="font-size: 25px;">การเดินทาง</label>
+        <label for="location" style="font-size: 15px;">สำหรับผู้พิการ</label>
+        <div class="container" style="align-items: center; justify-content: center; height: 30px; display: flex;">
+            <img src="assets/pin.png" alt="Small Image" style="width: 20px; height: auto;">
+            <input type="text" id="location" name="location" placeholder="ไปที่ไหน?" required>
+            <img src="assets/mic.png" alt="Small Image" style="width: 20px; height: auto;">
+        </div>
+    </div>
+    <div class="container">
+        <div style="align-items: center; height: 30px; display: flex;">
+            <p style="font-size: 25px;">เส้นทางโปรด</p>
+            <img src="assets/star.png" alt="Small Image" style="width: 25px; height: auto; margin: 10px;">
+        </div>
+        <br>
+        <div style="align-items: center; height: 30px; display: flex;">
+            <p style="font-size: 20px;">จุฬาลงกรณ์มหาวิทยาลัย</p>
+            <img src="assets/arrow.png" alt="Small Image" style="width: 30px; height: auto; margin: 10px;">
+        </div>
+        <p>254 ถ. พญาไท แขวงวังใหม่ เขตปทุมวัน กรุงเทพมหานคร 10330</p>
+    </div>
+    <div class="container">
+        <div style="align-items: center; height: 30px; display: flex;">
+            <p style="font-size: 25px;">ประวัติการเดินทาง</p>
+            <img src="assets/history.png" alt="Small Image" style="width: 30px; height: auto; margin: 10px;">
+        </div>
+        <p style="font-size: 20px;">MBK → สามย่านมิตรทาวน์</p>
+        <p>เริ่มเดินทาง 12.10 น.
+        <br>สิ้นสุดการเดินทาง 12.22 น.
+        <br>ต่าโดยสาร 10 บาท</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/bus.png" alt="Small Image">
+    </div>    
+    <label class="ending">2023 CallBus Inc. Term and Condition <br>
+    Invisible reCAPTCHA by Google Privacy Policy and Terms of use</label>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function validateInput() {
+            var userInput = document.getElementById('location').value.trim();
+            if (!userInput) {alert('Please enter a valid input.')}
+            else {window.location.href = 'index.html'}
+        }
+    </script>
+</body>
+</html>

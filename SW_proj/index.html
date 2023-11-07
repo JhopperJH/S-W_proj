@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - CALL BUS</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+            CallBus
+    </div>
+    <div class="background-overlay"></div>
+        <div class="container">
+            <form id="registration-form" action="process_registration.php" method="post">
+                <label for="phone">กรุณากรอกเบอร์โทรศัพท์</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </form>
+        </div>
+        <button id="next-button" type="submit" onclick="validateInput()">ต่อไป</button>
+    <div class="image-container">
+        <img src="assets/bus.png" alt="Small Image">
+    </div>    
+    <label class="ending">2023 CallBus Inc. Term and Condition <br>
+    Invisible reCAPTCHA by Google Privacy Policy and Terms of use</label>
+    <script>
+        function validateInput() {
+            var userInput = document.getElementById('phone').value.trim();
+            if (!userInput || userInput.length != 10 || isNaN(userInput)) {alert('Please enter a valid input.')}
+            else {window.location.href = 'register.html'}
+        }
+    </script>
+</body>
+</html>

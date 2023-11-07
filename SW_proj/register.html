@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALL BUS - Registration</title>
+    <link rel="stylesheet" type="text/css" href="register.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        CallBus
+    </div>
+    <div class="background-overlay"></div>
+    <button id="go-back-button" onclick="goBack()"><img src="assets\back.png" style="width: 30px; height: auto;"></img></button>
+    <div class="container">
+        <div class="registration-form">
+            <label for="title">คำนำหน้าชื่อ</label>
+            <input type="text" id="title" name="title" placeholder="Enter your title" required>
+            
+            <label for="name">ชื่อ</label>
+            <input type="text" id="name" name="name" placeholder="Enter your phone name" required>
+
+            <label for="surname">นามสกุล</label>
+            <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+
+            <label for="id">เลขบัตรประชาชน:</label>
+            <input type="text" id="id" name="id" placeholder="Enter your Identification Number" required>
+
+        </div>
+    </div>
+    <div class="mid">
+        <button id="next-button" onclick="validateInput()">Next</button>
+    </div>
+    <div class="image-container">
+        <img src="assets/bus.png" alt="Small Image">
+    </div>    
+    <label class="ending">2023 CallBus Inc. Term and Condition <br>
+    Invisible reCAPTCHA by Google Privacy Policy and Terms of use</label>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function validateInput() {
+            var userInput = document.getElementById('title').value.trim();
+            var userInput2 = document.getElementById('name').value.trim();
+            var userInput3 = document.getElementById('surname').value.trim();
+            var userInput4 = document.getElementById('id').value.trim();
+            console.log(userInput)
+            if (!userInput || !userInput2 || !userInput3 || !userInput4 || userInput4.length != 13 || isNaN(userInput4)) {alert('Please enter a valid input.')}
+            else {window.location.href = 'menu.html'}
+        }
+    </script>
+</body>
+</html>
