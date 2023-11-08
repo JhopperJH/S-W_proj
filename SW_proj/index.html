@@ -28,7 +28,9 @@
     <script>
         function validateInput() {
             var userInput = document.getElementById('phone').value.trim();
-            if (!userInput || userInput.length != 10 || isNaN(userInput)) {alert('Please enter a valid input.')}
+            if (!userInput) {alert('กรุณากรอกเบอร์โทรศัพท์')}
+            else if (isNaN(userInput)) {alert('กรุณากรอกแค่ตัวเลขลงช่องเบอร์โทรศัพท์')}
+            else if (userInput.length != 10) {alert('กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก')}
             else {window.location.href = 'register.html'}
         }
     </script>
