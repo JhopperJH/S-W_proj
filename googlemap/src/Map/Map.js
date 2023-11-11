@@ -6,12 +6,13 @@ import {
   Autocomplete,
   DirectionsRenderer
 } from "@react-google-maps/api";
+import { getDatabase, ref, set, push } from "firebase/database";
 
-import { useLocation } from "react-router-dom";
-import { async } from "@firebase/util";
+import {db} from '../firebase.db'
 // console.log(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
 
-function getLocation() {
+
+const getLocation = () => {
   return new Promise((resolve, reject) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -34,7 +35,9 @@ function getLocation() {
 
 const center = await getLocation();
 
-function Map() {
+function Map(props) {
+
+  const uid = props.data.uid
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey : 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
@@ -47,13 +50,22 @@ function Map() {
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
 
-  const originRef = useRef()
+  const originRef = useRef(null)
 
-  const destinationRef = useRef()
+  const destinationRef = useRef(null)
 
-  async function setOriginToCurrentLocation() {
+  async function writeHistoryData (uid)  {
+    let date = new Date().toJSON()
     const currentLocation = await getLocation();
-    origin.current.value = new window.google.maps.LatLng(currentLocation.lat, currentLocation.lng);
+    const data = {
+      date : date,
+      origin : originRef.current.value,
+      destination : destinationRef.current.value
+    }
+
+    const postListRef = ref(db, `${uid}`)
+    const newPostRef = push(postListRef)
+    set(newPostRef, data)
   }
 
   async function calculateRoute() {
@@ -64,7 +76,7 @@ function Map() {
     const directionService = new window.google.maps.DirectionsService()
     const currentLocation = await getLocation();
     const results = await directionService.route({
-        origin: new window.google.maps.LatLng(currentLocation.lat, currentLocation.lng),
+        origin : originRef.current.value === '' ? new window.google.maps.LatLng(currentLocation.lat, currentLocation.lng) : originRef.current.value,
         destination: destinationRef.current.value,
         travelMode: window.google.maps.TravelMode.DRIVING,
       })
@@ -72,6 +84,8 @@ function Map() {
     setDirectionResponse(results)
     setDistance(results.routes[0].legs[0].distance.text)
     setDuration(results.routes[0].legs[0].duration.text)
+    
+    writeHistoryData(uid)
 
   }
 
@@ -89,7 +103,6 @@ function Map() {
       <Autocomplete>
         <input type="text" placeholder='origin' ref={originRef}></input>
       </Autocomplete>
-      <button onClick={setOriginToCurrentLocation}>Set</button>
 
       <Autocomplete>
         <input type="text" placeholder="destination" ref={destinationRef}></input>

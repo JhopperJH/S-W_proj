@@ -13,9 +13,10 @@ const firebaseConfig = {
   storageBucket: "sw-website-66.appspot.com",
   messagingSenderId: "1043806272032",
   appId: "1:1043806272032:web:aa06253df0b6ceb702da45",
-  databaseURL : "https://sw-website-66-default-rtdb.asia-southeast1.firebasedatabase.app.firebaseio.com"
+  databaseURL : "https://sw-website-66-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+// const database = getDatabase(firebaseConfig)
 export const auth = getAuth(app);

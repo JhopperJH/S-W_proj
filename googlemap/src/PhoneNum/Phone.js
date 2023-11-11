@@ -61,6 +61,7 @@ function Phone() {
       setLoginState(true)
       // console.log(loginState)
       // createUser(res.user.uid)
+      console.log(res.user.uid)
       navigate('./menu', {state : {uid : res.user.uid, phoneNumber : res.user.phoneNumber, isLogin : true}})
     })
     // Handle OTP submission logic here
