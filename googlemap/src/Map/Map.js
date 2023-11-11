@@ -36,7 +36,8 @@ const center = await getLocation();
 function Map() {
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+    googleMapsApiKey : 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
+    // googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
     libraries: ["places"],
   });
 

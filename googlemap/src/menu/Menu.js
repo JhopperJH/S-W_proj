@@ -8,20 +8,25 @@ import historyPic from "../assets/history.png";
 import busPic from "../assets/bus.png";
 
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
 function Menu() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const phoneNumber = location.state.phoneNumber
+  // const uid = location.state.uid
+
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+    googleMapsApiKey: 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
     libraries: ["places"],
   });
 
   return isLoaded ? (
     <div className="menu-container">
       <div className="header">CallBus</div>
+      {phoneNumber}
       <div className="background-overlay"></div>
       <button id="go-back-button" onClick={() => {navigate('/register')}}>
         <img src={backPic} style={{ width: "30px", height: "auto" }}></img>
