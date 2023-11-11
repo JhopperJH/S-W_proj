@@ -9,9 +9,10 @@ function Phone() {
   const navigate = useNavigate();
 
   const [hasFilled, setHasFilled] = useState(false);
-  const [phoneNum, setPhoneNum] = useState("+66");
+  const [phoneNum, setPhoneNum] = useState("+66923629551");
   const [otp, setOtp] = useState("");
   const [user, setUser] = useState(null)
+  const [loginState, setLoginState] = useState(false)
 
   const generateRecaptha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -57,9 +58,10 @@ function Phone() {
     .then(async (res) => {
       console.log(res);
       setUser(res.user)
-      console.log(user)
-      createUser(res.user.uid)
-      navigate('./menu', {state : {phoneNumber : res.user.phoneNumber, uid : res.user.uid}})
+      setLoginState(true)
+      // console.log(loginState)
+      // createUser(res.user.uid)
+      navigate('./menu', {state : {uid : res.user.uid, phoneNumber : res.user.phoneNumber, isLogin : true}})
     })
     // Handle OTP submission logic here
     // You can use the 'otp' state to verify the OTP

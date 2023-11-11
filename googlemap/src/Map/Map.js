@@ -8,6 +8,7 @@ import {
 } from "@react-google-maps/api";
 
 import { useLocation } from "react-router-dom";
+import { async } from "@firebase/util";
 // console.log(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
 
 function getLocation() {
@@ -50,6 +51,10 @@ function Map() {
 
   const destinationRef = useRef()
 
+  async function setOriginToCurrentLocation() {
+    const currentLocation = await getLocation();
+    origin.current.value = new window.google.maps.LatLng(currentLocation.lat, currentLocation.lng);
+  }
 
   async function calculateRoute() {
     if(destinationRef.current.value === '') {
@@ -74,16 +79,17 @@ function Map() {
     setDirectionResponse(null)
     setDistance(null)
     setDuration(null)
-    // originRef.current.value = ''
+    originRef.current.value = ''
     destinationRef.current.value = ''
   }
 
   return isLoaded ? (
     <div>
       <button onClick={() => map.panTo(center)}>Current</button>
-      {/* <Autocomplete>
-        <input type="text" value = {new window.google.maps.LatLng(center.lat, center.lng)} placeholder={new window.google.maps.LatLng(center.lat, center.lng)} ref={originRef}></input>
-      </Autocomplete> */}
+      <Autocomplete>
+        <input type="text" placeholder='origin' ref={originRef}></input>
+      </Autocomplete>
+      <button onClick={setOriginToCurrentLocation}>Set</button>
 
       <Autocomplete>
         <input type="text" placeholder="destination" ref={destinationRef}></input>
