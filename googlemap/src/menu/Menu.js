@@ -17,7 +17,6 @@ function Menu() {
   const phoneNumber = location.state.phoneNumber
   // const uid = location.state.uid
 
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
     libraries: ["places"],
@@ -25,10 +24,20 @@ function Menu() {
 
   return isLoaded ? (
     <div className="menu-container">
-      <div className="header">CallBus</div>
-      {phoneNumber}
+      <div className="header">
+        {/* Include Google Fonts CSS */}
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+      />
+        CallBus
+      <link
+        href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap"
+        rel="stylesheet"
+      />
+      </div>
       <div className="background-overlay"></div>
-      <button id="go-back-button" onClick={() => {navigate('/register')}}>
+      <button id="go-back-button" onClick={() => {navigate('/')}}>
         <img src={backPic} style={{ width: "30px", height: "auto" }}></img>
       </button>
       <div className="registration-form">
@@ -49,6 +58,7 @@ function Menu() {
             alignItems: "center",
             justifyContent: "center",
             height: "30px",
+            width: "80%",
             display: "flex",
           }}
         >
@@ -62,6 +72,7 @@ function Menu() {
               type="text"
               name="location"
               placeholder="ไปที่ไหน?"
+              style={{ width: "100%", height: "auto" }}
               required
             ></input>
           </Autocomplete>

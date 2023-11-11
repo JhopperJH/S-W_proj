@@ -69,7 +69,18 @@ function Phone() {
 
   return (
     <div className="phoneContainer">
-      <div className="header">CallBus</div>
+      <div className="header">
+        {/* Include Google Fonts CSS */}
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+      />
+        CallBus
+      <link
+        href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap"
+        rel="stylesheet"
+      />
+      </div>
       <div className="background-overlay"></div>
       {hasFilled ? (
         <form onSubmit={handleOTPSubmission}>
@@ -83,9 +94,11 @@ function Phone() {
               required
             />
           </div>
-          <button id="submit-otp-button" type="submit">
-            ยืนยัน
-          </button>
+          <div className="center">
+            <button id="next-button" type="submit">
+              ยืนยัน
+            </button>
+          </div>
         </form>
       ) : (
         <form onSubmit={requestOTP}>
@@ -99,9 +112,11 @@ function Phone() {
               required
             ></input>
           </div>
-          <button id="next-button" type="submit">
-            ต่อไป
-          </button>
+          <div className="center">
+            <button id="next-button" type="submit">
+              ต่อไป
+            </button>
+          </div>
         </form>
       )}
       <div className="image-container">

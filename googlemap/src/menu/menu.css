@@ -5,14 +5,28 @@
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     height: 100vh;
+}
+
+.header {
+    position: flex;
+    color: #000;
+    padding: 30px;
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 48px;
+    align-items: center;
+    top: 0%;
 }
 
 .background-image {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     max-width: 300px;
-    margin: 10% auto;
+    margin: auto;
     position: relative;
 }
 
@@ -22,21 +36,12 @@
     left: 10px;
     background: none;
     border: none; /* Remove the default button border */
-    cursor: pointer; 
-}
-
-.header {
-    color: #000;
-    padding: 30px;
-    font-family: 'Julius Sans One', sans-serif;
-    font-size: 48px;
-    text-align: center;
-    top: 0%;
+    cursor: pointer;
 }
 
 .registration-form label,
 .registration-form input {
-    display: block;
+    display: fixed;
     margin: 10px;
     color: #000;
 }
@@ -50,7 +55,6 @@
 }
 
 input[type="text"] {
-    width: 100%;
     padding: 10px;
     margin: 10px;
     width: 85%;

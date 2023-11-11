@@ -30,6 +30,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.center{
+    text-align: center;
+    margin: 30px;
+}
+
 input[type="tel"] {
     padding: 10px;
     margin: 10px 0;
