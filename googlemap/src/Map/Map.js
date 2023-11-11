@@ -63,7 +63,7 @@ function Map(props) {
       destination : destinationRef.current.value
     }
 
-    const postListRef = ref(db, `${uid}`)
+    const postListRef = ref(db,`user/` + uid)
     const newPostRef = push(postListRef)
     set(newPostRef, data)
   }

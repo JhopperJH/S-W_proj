@@ -11,11 +11,14 @@ import History from "../history/history";
 
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {db} from '../firebase.db'
+import {ref, onValue} from 'firebase/database'
 
 function Menu(props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [datas, setData] = useState([])
 
   const state = location.state || {};
 
@@ -29,9 +32,22 @@ function Menu(props) {
     libraries: ["places"],
   });
 
-  console.log(isLogin);
 
-  const data = [
+  useEffect( () => {
+    const dataRef = ref(db,`user/` + uid)
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val()
+      
+      if(snapshot.exists()) {
+        setData(Object.values(data))
+      }
+    })
+  
+  return () => {
+  }
+  }, [uid])
+
+  const data_test = [
     {
       date: "12/12/2565",
       origin: "test1",
@@ -49,11 +65,11 @@ function Menu(props) {
   return isLogin ? (
     <div>
       <p>Login {phoneNumber}</p>
-      {data.map((value, index) => {
+      {datas.map((value, index) => {
         return <History data = {value} key = {index}></History>
       })}
       <div className="map-container">
-        {id.uid}
+        {console.log(datas)}
         <Map data={id}></Map>
       </div>
     </div>
