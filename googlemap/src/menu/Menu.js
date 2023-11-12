@@ -6,9 +6,16 @@ import starPic from "../assets/star.png";
 import arrowPic from "../assets/arrow.png";
 import historyPic from "../assets/history.png";
 import busPic from "../assets/bus.png";
+import Map from "../Map/Map";
+import History from "../history/history";
 
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { useEffect, useRef, useState } from "react";
+import {db} from '../firebase.db'
+import {ref, onValue} from 'firebase/database'
+
 import React, { useState } from "react";
 
 import SpeechRecognition, {
@@ -17,11 +24,16 @@ import SpeechRecognition, {
 import IconButton from "@mui/material/IconButton";
 import MicIcon from "@mui/icons-material/Mic";
 
-function Menu() {
+function Menu(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const phoneNumber = location.state.phoneNumber;
-  // const uid = location.state.uid
+  const [datas, setData] = useState([])
+
+  const state = location.state || {};
+
+  const isLogin = state.isLogin || false;
+  const phoneNumber = state.phoneNumber;
+  const uid = state.uid;
 
   const [message, setMessage] = useState("");
 
@@ -55,13 +67,8 @@ function Menu() {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition({ commands });
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8",
-    libraries: ["places"],
-  });
-
-  if (!browserSupportsSpeechRecognition) {
+  
+    if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
@@ -73,14 +80,30 @@ function Menu() {
     }
   };
 
-  const handleText = () => {
-    const text = transcript;
-    console.log(text.includes("ไป"));
-    resetTranscript();
-  };
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8",
+    libraries: ["places"],
+  });
 
-  return isLoaded ? (
+  useEffect( () => {
+    const dataRef = ref(db,`user/` + uid)
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val()
+      
+      if(snapshot.exists()) {
+        setData(Object.values(data))
+      }
+    })
+  
+  return () => {
+  }
+  }, [uid])
+
+  const id = {uid : uid}
+
+  return isLogin ? (
     <div className="menu-container">
+      <p>Login {phoneNumber}</p>
       <div className="header">CallBus</div>
       {phoneNumber}
       <div className="background-overlay"></div>
@@ -138,7 +161,7 @@ function Menu() {
           <IconButton onClick={handleMic}>
             <MicIcon />
           </IconButton>
-          <p onChange={handleText}>{message}</p>
+          <p>{message}</p>
         </div>
       </div>
       <div className="container">
@@ -170,26 +193,25 @@ function Menu() {
             style={{ width: "30px", height: "auto", margin: "10px" }}
           ></img>
         </div>
-        <p style={{ fontSize: "20px" }}>MBK → สามย่านมิตรทาวน์</p>
-        <p>
-          เริ่มเดินทาง 12.10 น.
-          <br />
-          สิ้นสุดการเดินทาง 12.22 น.
-          <br />
-          ต่าโดยสาร 10 บาท
-        </p>
+              {datas.map((value, index) => {
+                return <History data = {value} key = {index}></History>
+              })}
       </div>
       <div className="image-container">
         <img src={busPic} alt=""></img>
       </div>
-      <label className="ending">
-        2023 CallBus Inc. Term and Condition <br></br>
-        Invisible reCAPTCHA by Google Privacy Policy and Terms of use
-      </label>
+      <div className="map-container">
+        {console.log(datas)}
+        <Map data={id}></Map>
+      </div>
     </div>
   ) : (
-    <></>
+    <div>
+      <p>Error</p>
+    </div>
   );
+
+
 }
 
 export default Menu;
