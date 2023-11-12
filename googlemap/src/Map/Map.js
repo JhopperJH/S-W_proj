@@ -38,6 +38,15 @@ const center = await getLocation();
 function Map(props) {
 
   const uid = props.data.uid
+  const origin = props.data.origin 
+  const destination = props.data.destination
+
+  useEffect(() => {
+    if (props.confirmation) {
+      // If confirmation becomes true, call the calculateRoute function
+      calculateRoute();
+    }
+  }, [props.confirmation]);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey : 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
@@ -50,9 +59,9 @@ function Map(props) {
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
 
-  const originRef = useRef(null)
+  const originRef = useRef(origin)
 
-  const destinationRef = useRef(null)
+  const destinationRef = useRef(destination)
 
   async function writeHistoryData (uid)  {
     let date = new Date().toJSON()
@@ -60,10 +69,11 @@ function Map(props) {
     const data = {
       date : date,
       origin : originRef.current.value,
-      destination : destinationRef.current.value
+      destination : destinationRef.current.value,
+      isFavorite : false
     }
 
-    const postListRef = ref(db,`user/` + uid)
+    const postListRef = ref(db,`user/` + uid + `/history`)
     const newPostRef = push(postListRef)
     set(newPostRef, data)
   }
@@ -80,6 +90,8 @@ function Map(props) {
         destination: destinationRef.current.value,
         travelMode: window.google.maps.TravelMode.DRIVING,
       })
+
+    alert('นำทาง')
 
     setDirectionResponse(results)
     setDistance(results.routes[0].legs[0].distance.text)
@@ -99,13 +111,15 @@ function Map(props) {
 
   return isLoaded ? (
     <div>
+      {origin}
+
       <button onClick={() => map.panTo(center)}>Current</button>
       <Autocomplete>
-        <input type="text" placeholder='origin' ref={originRef}></input>
+        <input type="text" placeholder='origin' value = {origin} ref={originRef}></input>
       </Autocomplete>
 
       <Autocomplete>
-        <input type="text" placeholder="destination" ref={destinationRef}></input>
+        <input type="text" placeholder="destination"  value = {destination} ref={destinationRef}></input>
       </Autocomplete>
 
       <button onClick={calculateRoute}>Route</button>

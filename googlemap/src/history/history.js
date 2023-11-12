@@ -1,14 +1,53 @@
+import { useState } from 'react'
+import {db} from '../firebase.db'
+import {push, child, ref, update} from 'firebase/database'
+import { IconButton } from '@mui/material'
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarRateIcon from '@mui/icons-material/StarRate';
+
 function History(props) {
 
     const date = props.data.date
     const origin = props.data.origin
     const destination = props.data.destination
+    const isFavorite = props.data.isFavorite
+    const uid = props.data.uid
+    const key = props.data.key
+
+
+    function writeNewHistory() {
+        const postData = {
+            date : date,
+            origin : origin,
+            destination : destination,
+            isFavorite : !isFavorite
+        }
+
+
+        console.log("key : ",key)
+
+        const updates = {}
+        updates[`user/` + uid + `/history/` + key] = postData
+        
+        return update(ref(db), updates)
+    }
 
     return (
         <div>
-            date : {date}
-            origin : {origin}
-            destination : {destination}
+            uid : {uid} <br/>
+            date : {date} <br/>
+            origin : {origin} <br/>
+            destination : {destination} <br/>
+            <div>
+                <IconButton onClick={() => {writeNewHistory();}}>
+                {(isFavorite) ? (
+                    <StarRateIcon/>
+                    ) : (
+                    <StarOutlineIcon/>
+                    )
+                }
+                </IconButton>
+            </div>
         </div>
     )
 }
