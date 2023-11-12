@@ -27,6 +27,7 @@ function Menu(props) {
   const location = useLocation();
   const [datas, setData] = useState([]);
   const [keys, setKeys] = useState([]);
+  
 
   const state = location.state || {};
 
@@ -35,7 +36,7 @@ function Menu(props) {
   const uid = state.uid;
   const initMapvalue = {uid : uid}
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("____________________________");
   const [origin, setOrigin] = useState("")
   const [destination, setDestination] = useState("")
   const [mapData, setMapData] = useState(initMapvalue)
@@ -146,48 +147,9 @@ function Menu(props) {
 
   return isLogin ? (
     <div className="menu-container">
-      <div className="header">
-        {/* Include Google Fonts CSS */}
-      <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-      />
-        CallBus
-      <link
-        href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap"
-        rel="stylesheet"
-      />
-      </div>
-      <div className="background-overlay"></div>
-      <button id="go-back-button" onClick={() => {navigate('/')}}>
-        <img src={backPic} style={{ width: "30px", height: "auto" }}></img>
       <p>Login {phoneNumber}</p>
-      <div className="header">CallBus</div>
-      {phoneNumber}
       <div className="background-overlay"></div>
-      <button
-        id="go-back-button"
-        onClick={() => {
-          navigate("/register");
-        }}
-      >
-        <img
-          src={backPic}
-          alt=""
-          style={{ width: "30px", height: "auto" }}
-        ></img>
-      </button>
       <div className="registration-form">
-        <div className="right">
-          <button
-            id="next-button"
-            onClick={() => {
-              navigate("/map");
-            }}
-          >
-            แผนที่
-          </button>
-        </div>
         <label for="location" style={{ fontSize: "25px" }}>
           การเดินทาง
         </label>
@@ -234,7 +196,7 @@ function Menu(props) {
           ></img>
         </div>
         <br />
-        <div>
+        <div style={{height: '150px', overflowY: 'scroll'}}>
           {Object.keys(datas).map((key, index) => {
             datas[key].uid = mapData.uid;
             datas[key].key = key;
@@ -247,28 +209,27 @@ function Menu(props) {
         </div>
       </div>
       <div className="container">
-        <div style={{ alignItems: "center", height: "30px", display: "flex" }}>
-          <p style={{ fontSize: "25px" }}>ประวัติการเดินทาง</p>
+        <div style={{ alignItems:"center", height: "30px", display: "flex"}}>
+          <p style={{ fontSize: "25px"}}>ประวัติการเดินทาง</p>
           <img
             src={historyPic}
             alt=""
             style={{ width: "30px", height: "auto", margin: "10px" }}
           ></img>
         </div>
-
-        {datas !== null ? (
-          Object.keys(datas).map((key, index) => {
-            console.log(datas[key]);
-            datas[key].uid = mapData.uid;
-            datas[key].key = key;
-            return <History data={datas[key]} key={index}></History>;
-          })
-        ) : (
-          <p>ไม่มีประวัตรการเดินทาง</p>
-        )}
-      </div>
-      <div className="image-container">
-        <img src={busPic} alt=""></img>
+        <br />
+        <div style={{height: '150px', overflowY: 'scroll'}}>
+          {datas !== null ? (
+            Object.keys(datas).reverse().map((key, index) => {
+              console.log(datas[key]);
+              datas[key].uid = mapData.uid;
+              datas[key].key = key;
+              return <History data={datas[key]} key={index}></History>;
+            })
+          ) : (
+            <p>ไม่มีประวัตรการเดินทาง</p>
+          )}
+        </div>
       </div>
       <div className="map-container">
         {console.log('MAPDATA : ', mapData)}

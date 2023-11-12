@@ -1,3 +1,4 @@
+import "./Map.css";
 import React, { useState, useEffect, useRef } from "react";
 import {
   useJsApiLoader,
@@ -64,10 +65,10 @@ function Map(props) {
   const destinationRef = useRef(destination)
 
   async function writeHistoryData (uid)  {
-    let date = new Date().toJSON()
+    let date = formatDate(new Date())
     const currentLocation = await getLocation();
     const data = {
-      date : date,
+      date,
       origin : originRef.current.value,
       destination : destinationRef.current.value,
       isFavorite : false
@@ -91,8 +92,6 @@ function Map(props) {
         travelMode: window.google.maps.TravelMode.DRIVING,
       })
 
-    alert('นำทาง')
-
     setDirectionResponse(results)
     setDistance(results.routes[0].legs[0].distance.text)
     setDuration(results.routes[0].legs[0].duration.text)
@@ -109,43 +108,71 @@ function Map(props) {
     destinationRef.current.value = ''
   }
 
+  function formatDate(inputDateString) {
+    const inputDate = new Date(inputDateString);
+  
+    // Define options for formatting
+    const options = {
+      year: "numeric",
+      month: "short", // Short month name (e.g., "Jan", "Feb")
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+  
+    // Format the date
+    const dateFormatter = new Intl.DateTimeFormat("th-TH", options);
+    const formattedDate = dateFormatter.format(inputDate);
+  
+    const part = formattedDate.split(" ");
+    const result = `${part[0]} ${part[1]} ${part[2].substring(2)} เวลา ${
+      part[3]
+    }`;
+  
+    return result; // Output: "1 ต.ค. 65 เวลา 20:44 น"
+  }
+
   return isLoaded ? (
     <div>
-      {origin}
+      <div style={{width: "80%", margin:"10px"}}>
+        <button id="next-button" onClick={() => map.panTo(center)}>Current</button>
+        <Autocomplete>
+          <input type="text" placeholder='origin' value = {origin} ref={originRef}></input>
+        </Autocomplete>
 
-      <button onClick={() => map.panTo(center)}>Current</button>
-      <Autocomplete>
-        <input type="text" placeholder='origin' value = {origin} ref={originRef}></input>
-      </Autocomplete>
+        <Autocomplete>
+          <input type="text" placeholder="destination"  value = {destination} ref={destinationRef}></input>
+        </Autocomplete>
 
-      <Autocomplete>
-        <input type="text" placeholder="destination"  value = {destination} ref={destinationRef}></input>
-      </Autocomplete>
+        <button id="next-button" onClick={calculateRoute}>Route</button>
+        <button id="next-button" onClick={clearRoute}>Clear</button>
 
-      <button onClick={calculateRoute}>Route</button>
-      <button onClick={clearRoute}>Clear</button>
-
-      Distance : {distance}
-      Duration : {duration}
-      <div style={{ height: "100vh", width: "100%" }}>
-        {/* goole map box */}
-        <GoogleMap
-          center={center}
-          zoom={15}
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-          onLoad={(map) => setMap(map)}
-        >
-          {/* Display marker, direction */}
-          {console.log("Marker position :" + center.lat  + " " + center.lng)}
-          <Marker position={center}></Marker>
-          {directionResponse && <DirectionsRenderer directions={directionResponse}></DirectionsRenderer>}
-        </GoogleMap>
+        <div className="container">
+          Distance : {distance}<br></br>
+          Duration : {duration}
+        </div>
+      </div>
+      <div style={{display:"flex", justifyContent:"center"}}>
+        <div style={{ height: "100vh", width: "90%"}}>
+          {/* goole map box */}
+          <GoogleMap
+            center={center}
+            zoom={15}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            options={{
+              zoomControl: false,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+            }}
+            onLoad={(map) => setMap(map)}
+          >
+            {/* Display marker, direction */}
+            {console.log("Marker position :" + center.lat  + " " + center.lng)}
+            <Marker position={center}></Marker>
+            {directionResponse && <DirectionsRenderer directions={directionResponse}></DirectionsRenderer>}
+          </GoogleMap>
+        </div>
       </div>
     </div>
   ) : (

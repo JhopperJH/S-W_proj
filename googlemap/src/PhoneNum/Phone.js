@@ -90,7 +90,7 @@ function Phone() {
           <div className="container">
             <label htmlFor="phone">กรอกรหัส OTP</label>
             <input
-              type="text"
+              type="tel"
               value={otp}
               onChange={(event) => setOtp(event.target.value)}
               placeholder="Enter OTP"

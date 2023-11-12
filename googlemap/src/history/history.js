@@ -33,11 +33,10 @@ function History(props) {
     }
 
     return (
-        <div>
-            uid : {uid} <br/>
-            date : {date} <br/>
-            origin : {origin} <br/>
-            destination : {destination} <br/>
+        <div style={{fontSize: "20px", alignItems: "center", display:" flex", justifyContent:"space-between"}}>
+            {origin} → {destination} <br/>
+            เริ่มเดินทาง {date} <br/>
+            _______________________
             <div>
                 <IconButton onClick={() => {writeNewHistory();}}>
                 {(isFavorite) ? (

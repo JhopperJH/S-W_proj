@@ -5,11 +5,11 @@
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    display: block;
-    justify-content: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     height: 100vh;
-    overflow: auto;
 }
 
 .header {
@@ -55,7 +55,7 @@
 }
 
 input[type="text"] {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     margin: 10px;
     border: 1px solid #ccc;
@@ -115,5 +115,5 @@ input[type="text"] {
 
 .map-container {
     height: 10rem;
-    width: auto
+    weight: auto
 }
