@@ -17,16 +17,21 @@
     <div class="container">
         <div class="registration-form">
             <label for="title">คำนำหน้าชื่อ</label>
-            <input type="text" id="title" name="title" placeholder="Enter your title" required>
-            
-            <label for="name">ชื่อ</label>
-            <input type="text" id="name" name="name" placeholder="Enter your phone name" required>
+            <select type="text" id="title" name="title" class="custom-select" required>
+                <option value="" disabled selected>คำนำหน้าชื่อ</option>
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว">นางสาว</option>
+            </select>
+
+            <label for="name">ชื่อจริง</label>
+            <input type="text" id="name" name="name" placeholder="ชื่อจริง" required>
 
             <label for="surname">นามสกุล</label>
-            <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+            <input type="text" id="surname" name="surname" placeholder="นามสกุล" required>
 
             <label for="id">เลขบัตรประชาชน:</label>
-            <input type="text" id="id" name="id" placeholder="Enter your Identification Number" required>
+            <input type="text" id="id" name="id" placeholder="หมายเลขบัตรประชาชน" required>
 
         </div>
     </div>
@@ -45,12 +50,15 @@
         }
 
         function validateInput() {
-            var userInput = document.getElementById('title').value.trim();
+            var userInput = document.getElementById('title').value;
             var userInput2 = document.getElementById('name').value.trim();
             var userInput3 = document.getElementById('surname').value.trim();
             var userInput4 = document.getElementById('id').value.trim();
             console.log(userInput)
-            if (!userInput || !userInput2 || !userInput3 || !userInput4 || userInput4.length != 13 || isNaN(userInput4)) {alert('Please enter a valid input.')}
+            if (userInput == '') {alert('โปรดเลือกคำนำหน้าชื่อ')}
+            else if(!userInput2 || !userInput3 || !userInput4) {alert('โปรดกรอกช้อมูลของท่านให้ครบถ้วน')}
+            else if(isNaN(userInput4)) {alert('กรุณาใส่แค่ตัวเลขลงช่องหมายเลขบัตรประชาชน')}
+            else if(userInput4.length != 13 ) {alert('กรุณาใส่หมายเลขบัตรประชาชนให้ครบ 13 หลัก')}
             else {window.location.href = 'menu.html'}
         }
     </script>

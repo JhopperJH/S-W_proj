@@ -63,6 +63,27 @@ input[type="text"] {
     border-radius: 5px;
 }
 
+/* Style the select element to be transparent */
+.custom-select {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+/* Style the arrow-down icon */
+.custom-select:after {
+    content: '\25BC'; /* Unicode for down arrow */
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+/* Style the dropdown options */
+.custom-select option {
+    background-color: white;
+}
+
 #next-button {
     background-color: #007bff;
     color: #fff;
