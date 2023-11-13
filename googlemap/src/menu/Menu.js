@@ -16,8 +16,6 @@ import { useEffect, useRef, useState } from "react";
 import {db} from '../firebase.db'
 import {ref, onValue} from 'firebase/database'
 
-import React, { useState } from "react";
-
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -61,6 +59,22 @@ function Menu(props) {
     }
   ];
 
+  useEffect( () => {
+    const dataRef = ref(db,`user/` + uid)
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val()
+      
+      if(snapshot.exists()) {
+        setData(Object.values(data))
+      }
+    })
+  
+  return () => {
+  }
+  }, [uid])
+
+  const id = {uid : uid}
+
   const {
     transcript,
     listening,
@@ -79,27 +93,6 @@ function Menu(props) {
       SpeechRecognition.stopListening();
     }
   };
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8",
-    libraries: ["places"],
-  });
-
-  useEffect( () => {
-    const dataRef = ref(db,`user/` + uid)
-    onValue(dataRef, (snapshot) => {
-      const data = snapshot.val()
-      
-      if(snapshot.exists()) {
-        setData(Object.values(data))
-      }
-    })
-  
-  return () => {
-  }
-  }, [uid])
-
-  const id = {uid : uid}
 
   return isLogin ? (
     <div className="menu-container">
@@ -150,14 +143,14 @@ function Menu(props) {
             alt=""
             style={{ width: "20px", height: "auto" }}
           ></img>
-          <Autocomplete>
+          {/* <Autocomplete>
             <input
               type="text"
               name="location"
               placeholder="ไปที่ไหน?"
               required
             ></input>
-          </Autocomplete>
+          </Autocomplete> */}
           <IconButton onClick={handleMic}>
             <MicIcon />
           </IconButton>
