@@ -12,6 +12,8 @@ import { getDatabase, ref, set, push } from "firebase/database";
 import {db} from '../firebase.db'
 // console.log(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
 
+import Menu from "../menu/Menu";
+
 
 const getLocation = () => {
   return new Promise((resolve, reject) => {
@@ -46,6 +48,7 @@ function Map(props) {
     if (props.confirmation) {
       // If confirmation becomes true, call the calculateRoute function
       calculateRoute();
+      <Menu confirmation={false} />;
     }
   }, [props.confirmation]);
 
