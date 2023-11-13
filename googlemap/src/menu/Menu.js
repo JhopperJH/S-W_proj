@@ -5,7 +5,7 @@ import micPic from "../assets/mic.png";
 import starPic from "../assets/star.png";
 import arrowPic from "../assets/arrow.png";
 import historyPic from "../assets/history.png";
-import busPic from "../assets/bus.png";
+import busPic from "../assets/CallBus-removebg.png";
 import Map from "../Map/Map";
 import History from "../history/history";
 
@@ -13,8 +13,8 @@ import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useEffect, useRef, useState } from "react";
-import {db} from '../firebase.db'
-import {ref, onValue} from 'firebase/database'
+import { db } from "../firebase.db";
+import { ref, onValue } from "firebase/database";
 
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -25,15 +25,58 @@ import MicIcon from "@mui/icons-material/Mic";
 function Menu(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [datas, setData] = useState([])
+  const [datas, setData] = useState([]);
+  const [keys, setKeys] = useState([]);
+  
 
   const state = location.state || {};
 
   const isLogin = state.isLogin || false;
   const phoneNumber = state.phoneNumber;
   const uid = state.uid;
+  const initMapvalue = {uid : uid}
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("____________________________");
+  const [origin, setOrigin] = useState("")
+  const [destination, setDestination] = useState("")
+  const [mapData, setMapData] = useState(initMapvalue)
+  const [confirmation, setConfirmation] = useState(false)
+
+  const handleComfirmation = () => {
+    setConfirmation(true)
+  }
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8',
+    libraries: ["places"],
+  });
+
+  useEffect(() => {
+    // Update the mapData state when origin or destination changes
+    setMapData({
+      uid: uid,
+      origin: origin,
+      destination: destination,
+    });
+  }, [uid, origin, destination]);
+
+  useEffect(() => {
+    const dataRef = ref(db, `user/` + uid + `/history/`);
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val();
+      if (snapshot.exists()) {
+        setData(data);
+        console.log(datas);
+      }
+    });
+
+    return () => {};
+  }, [uid]);
+
+  // const { isLoaded } = useJsApiLoader({
+  //   googleMapsApiKey: "AIzaSyAoNWze06RB-8J87kZq7lwicy1AdiTF4i8",
+  //   libraries: ["places"],
+  // });
 
   const commands = [
     {
@@ -41,21 +84,44 @@ function Menu(props) {
       callback: (location1, location2) => {
         setMessage(`จุดรับ: ${location1}, จุดหมาย: ${location2}`);
         SpeechRecognition.stopListening();
+        setOrigin(location1)
+        setDestination(location2)
+        const id = { uid: uid,
+          origin : origin,
+          destination : destination };
+        setMapData(id)
       },
     },
     {
       command: "ไป*",
       callback: (location) => {
         setMessage(`จุดหมาย: ${location}`);
+        setDestination(location)
         SpeechRecognition.stopListening();
+        const id = { uid: uid,
+          origin : origin,
+          destination : destination };
+        setMapData(id)
       },
     },
     {
       command: "ไปที่*",
       callback: (location) => {
         setMessage(`จุดหมาย: ${location}`);
+        setDestination(location)
         SpeechRecognition.stopListening();
+        const id = { uid: uid,
+          origin : origin,
+          destination : destination };
+        setMapData(id)
       },
+    },
+    {
+      command : "ยืนยัน",
+      callback : () => {
+        handleComfirmation()
+        SpeechRecognition.stopListening();
+      }
     }
   ];
 
@@ -81,8 +147,8 @@ function Menu(props) {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition({ commands });
-  
-    if (!browserSupportsSpeechRecognition) {
+
+  if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
@@ -97,32 +163,8 @@ function Menu(props) {
   return isLogin ? (
     <div className="menu-container">
       <p>Login {phoneNumber}</p>
-      <div className="header">CallBus</div>
-      {phoneNumber}
       <div className="background-overlay"></div>
-      <button
-        id="go-back-button"
-        onClick={() => {
-          navigate("/register");
-        }}
-      >
-        <img
-          src={backPic}
-          alt=""
-          style={{ width: "30px", height: "auto" }}
-        ></img>
-      </button>
       <div className="registration-form">
-        <div className="right">
-          <button
-            id="next-button"
-            onClick={() => {
-              navigate("/map");
-            }}
-          >
-            แผนที่
-          </button>
-        </div>
         <label for="location" style={{ fontSize: "25px" }}>
           การเดินทาง
         </label>
@@ -135,6 +177,7 @@ function Menu(props) {
             alignItems: "center",
             justifyContent: "center",
             height: "30px",
+            width: "80%",
             display: "flex",
           }}
         >
@@ -148,6 +191,7 @@ function Menu(props) {
               type="text"
               name="location"
               placeholder="ไปที่ไหน?"
+              style={{ width: "100%", height: "auto" }}
               required
             ></input>
           </Autocomplete> */}
@@ -167,35 +211,44 @@ function Menu(props) {
           ></img>
         </div>
         <br />
-        <div style={{ alignItems: "center", height: "30px", display: "flex" }}>
-          <p style={{ fontSize: "25px" }}>จุฬาลงกรณ์มหาวิทยาลัย</p>
-          <img
-            src={arrowPic}
-            alt=""
-            style={{ width: "30px", height: "auto", margin: "10px" }}
-          ></img>
+        <div style={{height: '150px', overflowY: 'scroll'}}>
+          {Object.keys(datas).map((key, index) => {
+            datas[key].uid = mapData.uid;
+            datas[key].key = key;
+            if(datas[key].isFavorite) {
+              return <History data={datas[key]} key={index}></History>;
+            }
+            else {
+            }
+          })}
         </div>
-        <p>254 ถ. พญาไท แขวงวังใหม่ เขตปทุมวัน กรุงเทพมหานคร 10330</p>
       </div>
       <div className="container">
-        <div style={{ alignItems: "center", height: "30px", display: "flex" }}>
-          <p style={{ fontSize: "25px" }}>ประวัติการเดินทาง</p>
+        <div style={{ alignItems:"center", height: "30px", display: "flex"}}>
+          <p style={{ fontSize: "25px"}}>ประวัติการเดินทาง</p>
           <img
             src={historyPic}
             alt=""
             style={{ width: "30px", height: "auto", margin: "10px" }}
           ></img>
         </div>
-              {datas.map((value, index) => {
-                return <History data = {value} key = {index}></History>
-              })}
-      </div>
-      <div className="image-container">
-        <img src={busPic} alt=""></img>
+        <br />
+        <div style={{height: '150px', overflowY: 'scroll'}}>
+          {datas !== null ? (
+            Object.keys(datas).reverse().map((key, index) => {
+              console.log(datas[key]);
+              datas[key].uid = mapData.uid;
+              datas[key].key = key;
+              return <History data={datas[key]} key={index}></History>;
+            })
+          ) : (
+            <p>ไม่มีประวัตรการเดินทาง</p>
+          )}
+        </div>
       </div>
       <div className="map-container">
-        {console.log(datas)}
-        <Map data={id}></Map>
+        {console.log('MAPDATA : ', mapData)}
+        <Map data={mapData} confirmationCallback = {handleComfirmation}></Map>
       </div>
     </div>
   ) : (
@@ -203,8 +256,6 @@ function Menu(props) {
       <p>Error</p>
     </div>
   );
-
-
 }
 
 export default Menu;
